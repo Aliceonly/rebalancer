@@ -4,7 +4,9 @@ import {
     Percent,
     Token,
     Currency,
-    NativeCurrency
+    NativeCurrency,
+    CurrencyAmount,
+    TradeType
 } from '@uniswap/sdk-core';
 import { FeeAmount, TICK_SPACINGS, EMPTY_BYTES, NATIVE_NOT_SET } from './constants';
 import {
@@ -15,6 +17,8 @@ import {
     Actions,
     toHex,
     toAddress,
+    Route,
+    Trade,
 } from '@uniswap/v4-sdk';
 
 const SWAP_ROUTER_ABI = [
@@ -114,6 +118,39 @@ export class UniswapV4Rebalancer {
         tickUpper = Math.min(887272, tickUpper);
 
         return { tickLower, tickUpper };
+    }
+
+    public async swapExactInSingle(
+        tokenIn: Token | NativeCurrency,
+        tokenOut: Token | NativeCurrency,
+        pool: Pool,
+        fee: FeeAmount,
+        amountIn: bigint,
+        amountOutMinimum: bigint,
+        recipient: string
+    ): Promise<TransactionResponse> {
+        let planner: V4Planner = new V4Planner();
+        const route = new Route([pool], tokenIn, tokenOut);
+        planner.addAction(Actions.SWAP_EXACT_IN_SINGLE, [
+            {
+              poolKey: pool.poolKey,
+              zeroForOne: true, 
+              amountIn: amountIn,
+              amountOutMinimum: amountOutMinimum,
+              hookData: '0x',
+            },
+          ]);
+
+          const trade = await Trade.fromRoute(
+            route,
+            CurrencyAmount.fromRawAmount(tokenIn, amountIn.toString()),
+            TradeType.EXACT_INPUT
+          )
+          planner.addTrade(trade);
+          const trade_data = planner.finalize();
+          // TODO! send tx
+
+        
     }
 
     public async swapExactInput(
