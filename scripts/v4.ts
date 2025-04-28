@@ -638,37 +638,37 @@ async function main() {
         const deployer = new ethers.Wallet(process.env.privateKey!, provider);
         console.log("Running with account:", deployer.address);
 
-        // const config: Partial<RebalancerConfig> = {
-        //     swapRouterAddress: "0xef740bf23acae26f6492b10de645d6b98dc8eaf3", 
-        //     nftPositionManagerAddress: "0x4529a01c7a0410167c5740c487a8de60232617bf", 
-        //     poolManagerAddress: "0x1f98400000000000000000000000000000000004", 
-        //     token0Balance: 10000000000000000000n, 
-        //     token1Balance: 1000000000n, 
-        //     tickRange: 200, 
-        //     rebalanceThreshold: 5, 
-        //     monitorInterval: 300000,
-        //     slippageTolerance: new Percent(1, 100)
-        // };
+        const config: Partial<RebalancerConfig> = {
+            swapRouterAddress: "0xef740bf23acae26f6492b10de645d6b98dc8eaf3", 
+            nftPositionManagerAddress: "0x4529a01c7a0410167c5740c487a8de60232617bf", 
+            poolManagerAddress: "0x1f98400000000000000000000000000000000004", 
+            token0Balance: 10000000000000000000n, 
+            token1Balance: 1000000000n, 
+            tickRange: 200, 
+            rebalanceThreshold: 5, 
+            monitorInterval: 300000,
+            slippageTolerance: new Percent(1, 100)
+        };
 
-        // const rebalancer = new UniswapV4Rebalancer(deployer, config);
-        // console.log("UniswapV4Rebalancer initialized successfully");
+        const rebalancer = new UniswapV4Rebalancer(deployer, config);
+        console.log("UniswapV4Rebalancer initialized successfully");
 
-        // // Start monitoring
-        // await rebalancer.startMonitoring();
-        // console.log("Monitoring started. Press Ctrl+C to stop execution.");
+        // Start monitoring
+        await rebalancer.startMonitoring();
+        console.log("Monitoring started. Press Ctrl+C to stop execution.");
 
-        // // Keep the script running
-        // await new Promise(resolve => {
-        //     // Create a function that will be called when the process is terminated
-        //     const handleTermination = () => {
-        //         console.log("Stopping monitoring...");
-        //         rebalancer.stopMonitoring();
-        //         resolve(null);
-        //     };
+        // Keep the script running
+        await new Promise(resolve => {
+            // Create a function that will be called when the process is terminated
+            const handleTermination = () => {
+                console.log("Stopping monitoring...");
+                rebalancer.stopMonitoring();
+                resolve(null);
+            };
 
-        //     // Register the function to be called on SIGINT (Ctrl+C)
-        //     process.on('SIGINT', handleTermination);
-        // });
+            // Register the function to be called on SIGINT (Ctrl+C)
+            process.on('SIGINT', handleTermination);
+        });
     } catch (error) {
         console.error("Error in main function:", error);
         process.exit(1);

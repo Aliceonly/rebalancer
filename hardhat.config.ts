@@ -1,6 +1,6 @@
-import "@nomicfoundation/hardhat-toolbox"
+// import "@nomicfoundation/hardhat-toolbox"
 import "dotenv/config"
-import "@nomicfoundation/hardhat-ethers";
+import "@nomiclabs/hardhat-ethers";
 import { HardhatUserConfig } from "hardhat/config"
 // import "hardhat-abi-exporter"
 // import "hardhat-contract-sizer"
