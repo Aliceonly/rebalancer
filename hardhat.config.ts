@@ -1,12 +1,13 @@
 import "@nomicfoundation/hardhat-toolbox"
 import "dotenv/config"
-// import { HardhatUserConfig } from "hardhat/config"
+import "@nomicfoundation/hardhat-ethers";
+import { HardhatUserConfig } from "hardhat/config"
 // import "hardhat-abi-exporter"
 // import "hardhat-contract-sizer"
 // import * as tdly from "@tenderly/hardhat-tenderly"
 // tdly.setup({ automaticVerifications: false })
 
-const config = {
+const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.24",
     settings: {
@@ -18,18 +19,18 @@ const config = {
       evmVersion: "cancun",
     },
   },
-  abiExporter: {
-    path: `./abis`,
-    runOnCompile: true,
-    clear: true,
-    flat: true,
-    spacing: 2,
-    format: "json",
-  },
-  contractSizer: {
-    runOnCompile: false,
-    only: [],
-  },
+  // abiExporter: {
+  //   path: `./abis`,
+  //   runOnCompile: true,
+  //   clear: true,
+  //   flat: true,
+  //   spacing: 2,
+  //   format: "json",
+  // },
+  // contractSizer: {
+  //   runOnCompile: false,
+  //   only: [],
+  // },
   networks: {
     server: {
       url: "https://rpc.0xdefi.club",
@@ -40,7 +41,7 @@ const config = {
       },
       chainId: 31338,
     },
-    sepolia:{
+    sepolia: {
       chainId: 11155111,
       url: "https://eth-sepolia.g.alchemy.com/v2/Jbkri9q6ihizYHOsCHzelIFlt4kudVz_",
       accounts: process.env.privateKey ? [process.env.privateKey] : [],
@@ -92,12 +93,12 @@ const config = {
       url: "https://tiniest-special-sponge.monad-testnet.quiknode.pro/264621abc78b9a64d2445cd1551be1ab1c17eeac/",
       accounts: process.env.privateKey ? [process.env.privateKey] : [],
       chainId: 10143,
-    }, 
+    },
     uniChain: {
       url: "https://mainnet.unichain.org",
       accounts: process.env.privateKey ? [process.env.privateKey] : [],
       chainId: 130,
-    }, 
+    },
   },
 }
 

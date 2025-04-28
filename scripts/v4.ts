@@ -2,13 +2,13 @@ import { ethers } from 'hardhat';
 import { Signer, TransactionResponse } from 'ethers';
 import {
     Percent,
-    Token, 
+    Token,
     Currency,
     NativeCurrency,
     CurrencyAmount,
     TradeType
 } from '@uniswap/sdk-core';
-import { FeeAmount, TICK_SPACINGS, EMPTY_BYTES, NATIVE_NOT_SET, UNIVERSAL_ROUTER, UNIVERSAL_ROUTER_ABI } from './constants'; 
+import { FeeAmount, TICK_SPACINGS, EMPTY_BYTES, NATIVE_NOT_SET, UNIVERSAL_ROUTER, UNIVERSAL_ROUTER_ABI } from './constants';
 import {
     V4PositionManager,
     V4Planner,
@@ -61,10 +61,10 @@ interface posInfos {
     tickSpacing: number;
     tokenId: number;
     positionId: string;
-    tickLower: number; 
+    tickLower: number;
     tickUpper: number;
 }
- 
+
 const pos: posInfos[] = [
     {
         poolId: "0x04b7dd024db64cfbe325191c818266e4776918cd9eaf021c26949a859e654b16",
@@ -133,27 +133,27 @@ export class UniswapV4Rebalancer {
         let planner: V4Planner = new V4Planner();
         const route = new Route([pool], tokenIn, tokenOut);
         planner.addAction(Actions.SWAP_EXACT_IN_SINGLE, [
-            { 
-              poolKey: pool.poolKey,
-              zeroForOne: true, 
-              amountIn: amountIn,
-              amountOutMinimum: amountOutMinimum,
-              hookData: '0x',
-            }, 
-          ]); 
+            {
+                poolKey: pool.poolKey,
+                zeroForOne: true,
+                amountIn: amountIn,
+                amountOutMinimum: amountOutMinimum,
+                hookData: '0x',
+            },
+        ]);
 
         const trade = await Trade.fromRoute(
-        route,
-        CurrencyAmount.fromRawAmount(tokenIn, amountIn.toString()),
-        TradeType.EXACT_INPUT
+            route,
+            CurrencyAmount.fromRawAmount(tokenIn, amountIn.toString()),
+            TradeType.EXACT_INPUT
         )
         planner.addTrade(trade);
         const trade_data = planner.finalize();
         // 使用UniversalRouter
         const universalRouter = new ethers.Contract(
-        UNIVERSAL_ROUTER,
-        UNIVERSAL_ROUTER_ABI,
-        this.signer
+            UNIVERSAL_ROUTER,
+            UNIVERSAL_ROUTER_ABI,
+            this.signer
         );
         const swapMd = 0x10;
         const tx = await universalRouter.execute(swapMd, trade_data, this.config.deadline);
@@ -634,9 +634,9 @@ async function example() {
 // This is the Hardhat main function that will be executed when the script is run
 async function main() {
     try {
-        
-        const [deployer] = await ethers.getSigners();
-        // console.log("Running with account:", deployer.address);
+        const provider = new ethers.providers.JsonRpcProvider('https://mainnet.unichain.org');
+        const deployer = new ethers.Wallet(process.env.privateKey!, provider);
+        console.log("Running with account:", deployer.address);
 
         // const config: Partial<RebalancerConfig> = {
         //     swapRouterAddress: "0xef740bf23acae26f6492b10de645d6b98dc8eaf3", 
