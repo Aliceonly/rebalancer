@@ -8,7 +8,7 @@ import {
     CurrencyAmount,
     TradeType
 } from '@uniswap/sdk-core';
-import { FeeAmount, TICK_SPACINGS, EMPTY_BYTES, NATIVE_NOT_SET } from './constants';
+import { FeeAmount, TICK_SPACINGS, EMPTY_BYTES, NATIVE_NOT_SET, UNIVERSAL_ROUTER, UNIVERSAL_ROUTER_ABI } from './constants'; 
 import {
     V4PositionManager,
     V4Planner,
@@ -61,10 +61,10 @@ interface posInfos {
     tickSpacing: number;
     tokenId: number;
     positionId: string;
-    tickLower: number;
+    tickLower: number; 
     tickUpper: number;
 }
-
+ 
 const pos: posInfos[] = [
     {
         poolId: "0x1-0x2-3000",
@@ -132,25 +132,31 @@ export class UniswapV4Rebalancer {
         let planner: V4Planner = new V4Planner();
         const route = new Route([pool], tokenIn, tokenOut);
         planner.addAction(Actions.SWAP_EXACT_IN_SINGLE, [
-            {
+            { 
               poolKey: pool.poolKey,
               zeroForOne: true, 
               amountIn: amountIn,
               amountOutMinimum: amountOutMinimum,
               hookData: '0x',
-            },
-          ]);
+            }, 
+          ]); 
 
-          const trade = await Trade.fromRoute(
-            route,
-            CurrencyAmount.fromRawAmount(tokenIn, amountIn.toString()),
-            TradeType.EXACT_INPUT
-          )
-          planner.addTrade(trade);
-          const trade_data = planner.finalize();
-          // TODO! send tx
-
-        
+        const trade = await Trade.fromRoute(
+        route,
+        CurrencyAmount.fromRawAmount(tokenIn, amountIn.toString()),
+        TradeType.EXACT_INPUT
+        )
+        planner.addTrade(trade);
+        const trade_data = planner.finalize();
+        // 使用UniversalRouter
+        const universalRouter = new ethers.Contract(
+        UNIVERSAL_ROUTER,
+        UNIVERSAL_ROUTER_ABI,
+        this.signer
+        );
+        const swapMd = 0x10;
+        const tx = await universalRouter.execute(swapMd, trade_data, this.config.deadline);
+        return tx;
     }
 
     public async swapExactInput(

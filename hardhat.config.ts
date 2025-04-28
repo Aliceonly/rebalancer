@@ -92,7 +92,12 @@ const config = {
       url: "https://tiniest-special-sponge.monad-testnet.quiknode.pro/264621abc78b9a64d2445cd1551be1ab1c17eeac/",
       accounts: process.env.privateKey ? [process.env.privateKey] : [],
       chainId: 10143,
-    }
+    }, 
+    uniChain: {
+      url: "https://mainnet.unichain.org",
+      accounts: process.env.privateKey ? [process.env.privateKey] : [],
+      chainId: 130,
+    }, 
   },
 }
 
