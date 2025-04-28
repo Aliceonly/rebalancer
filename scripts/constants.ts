@@ -13,7 +13,8 @@ export const MSG_SENDER = '0x0000000000000000000000000000000000000001'
 export const Q96 = JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(96))
 export const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 
-// pool setup
+export const UNIVERSAL_ROUTER = '0xef740bf23acae26f6492b10de645d6b98dc8eaf3'
+// pool setup 
 export const FEE_AMOUNT_LOW = 100
 export const FEE_AMOUNT_MEDIUM = 3000
 export const FEE_AMOUNT_HIGHEST = 10_000
@@ -47,6 +48,10 @@ export enum PositionFunctions {
   ERC721PERMIT_PERMIT = '0x0f5730f1', // "permit(address,uint256,uint256,uint256,bytes)"
 }
 
+export const UNIVERSAL_ROUTER_ABI = [
+  'function execute(bytes calldata commands, bytes[] calldata inputs, uint256 deadline) external payable',
+]
+
 /**
  * The default factory enabled fee amounts, denominated in hundredths of bips.
  */
@@ -66,3 +71,4 @@ export const TICK_SPACINGS: { [amount in FeeAmount]: number } = {
   [FeeAmount.MEDIUM]: 60,
   [FeeAmount.HIGH]: 200,
 }
+
