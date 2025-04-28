@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { Signer, TransactionResponse } from 'ethers';
 import {
     Percent,
-    Token,
+    Token, 
     Currency,
     NativeCurrency,
     CurrencyAmount,
@@ -67,10 +67,11 @@ interface posInfos {
  
 const pos: posInfos[] = [
     {
-        poolId: "0x1-0x2-3000",
-        currencyA: new Token(1, "0x1", 18, "WETH"),
-        currencyB: new Token(1, "0x2", 18, "USDC"),
-        fee: 3000,
+        poolId: "0x04b7dd024db64cfbe325191c818266e4776918cd9eaf021c26949a859e654b16",
+        currencyA: new Token(130, "0x4200000000000000000000000000000000000006", 18, "ETH"),
+        currencyB: new Token(130, "0x9151434b16b9763660705744891fA906F660EcC5", 18, "USD0"),
+        // 0.05% feee
+        fee: 500,
         tickSpacing: 10,
         tokenId: 1,
         positionId: "1",
@@ -629,3 +630,56 @@ async function example() {
         rebalancer.stopMonitoring();
     }, 3600000);
 }
+
+// This is the Hardhat main function that will be executed when the script is run
+async function main() {
+    try {
+        
+        const [deployer] = await ethers.getSigners();
+        // console.log("Running with account:", deployer.address);
+
+        // const config: Partial<RebalancerConfig> = {
+        //     swapRouterAddress: "0xef740bf23acae26f6492b10de645d6b98dc8eaf3", 
+        //     nftPositionManagerAddress: "0x4529a01c7a0410167c5740c487a8de60232617bf", 
+        //     poolManagerAddress: "0x1f98400000000000000000000000000000000004", 
+        //     token0Balance: 10000000000000000000n, 
+        //     token1Balance: 1000000000n, 
+        //     tickRange: 200, 
+        //     rebalanceThreshold: 5, 
+        //     monitorInterval: 300000,
+        //     slippageTolerance: new Percent(1, 100)
+        // };
+
+        // const rebalancer = new UniswapV4Rebalancer(deployer, config);
+        // console.log("UniswapV4Rebalancer initialized successfully");
+
+        // // Start monitoring
+        // await rebalancer.startMonitoring();
+        // console.log("Monitoring started. Press Ctrl+C to stop execution.");
+
+        // // Keep the script running
+        // await new Promise(resolve => {
+        //     // Create a function that will be called when the process is terminated
+        //     const handleTermination = () => {
+        //         console.log("Stopping monitoring...");
+        //         rebalancer.stopMonitoring();
+        //         resolve(null);
+        //     };
+
+        //     // Register the function to be called on SIGINT (Ctrl+C)
+        //     process.on('SIGINT', handleTermination);
+        // });
+    } catch (error) {
+        console.error("Error in main function:", error);
+        process.exit(1);
+    }
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
